@@ -52,7 +52,7 @@ async function selectContact(name: string) {
 async function createContact() {
   const name = prompt('Contact name:')?.trim()
   if (!name || !dataFolder.value) return
-  const contact: Contact = { name, actions: [], notes: [], log: [] }
+  const contact: Contact = { name, notes: [], log: [] }
   await saveContact(dataFolder.value, contact)
   await refreshContacts()
   await selectContact(name)

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Contact } from '../types'
-import ActionsSection from './ActionsSection.vue'
 import NotesSection from './NotesSection.vue'
 import LogSection from './LogSection.vue'
 
@@ -15,17 +14,15 @@ const emit = defineEmits<{ update: [contact: Contact] }>()
     </div>
 
     <div class="flex-1 px-8 py-6 space-y-8">
-      <ActionsSection
-        :contact="contact"
-        @update="emit('update', $event)"
-      />
-      <hr class="border-gray-100" />
       <NotesSection
         :contact="contact"
         @update="emit('update', $event)"
       />
       <hr class="border-gray-100" />
-      <LogSection :log="contact.log" />
+      <LogSection
+        :contact="contact"
+        @update="emit('update', $event)"
+      />
     </div>
   </div>
 </template>

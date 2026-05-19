@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UserPlus } from 'lucide-vue-next'
-import type { Contact, ContactColor } from '../types'
-import { contactColor } from '../composables/useContacts'
+import type { Contact } from '../types'
+import { contactRowStyle } from '../composables/useContacts'
 
 const props = defineProps<{
   contactNames: string[]
@@ -14,13 +14,10 @@ const emit = defineEmits<{
   create: []
 }>()
 
-function colorClass(name: string): string {
+function itemStyle(name: string): Record<string, string> {
   const contact = props.contactsMap[name]
-  if (!contact) return ''
-  const color: ContactColor = contactColor(contact)
-  if (color === 'red') return 'bg-red-200 hover:bg-red-300'
-  if (color === 'yellow') return 'bg-yellow-100 hover:bg-yellow-200'
-  return 'hover:bg-gray-100'
+  if (!contact) return {}
+  return contactRowStyle(contact)
 }
 </script>
 
@@ -35,10 +32,12 @@ function colorClass(name: string): string {
         :key="name"
         @click="emit('select', name)"
         :class="[
-          'w-full text-left px-4 py-2 text-sm transition-colors',
-          colorClass(name),
-          selectedName === name ? 'font-medium text-gray-900' : 'text-gray-700'
+          'mx-2 my-0.5 w-[calc(100%-1rem)] rounded-md text-left px-4 py-2 text-sm transition-colors',
+          selectedName === name
+            ? 'font-medium ring-2 ring-black/20'
+            : 'hover:ring-1 hover:ring-black/8'
         ]"
+        :style="itemStyle(name)"
       >
         {{ name }}
       </button>

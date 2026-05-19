@@ -1,10 +1,3 @@
-export interface Action {
-  id: string
-  content: string
-  intervalDays?: number
-  lastProgressAt?: string
-}
-
 export interface Note {
   id: string
   content: string
@@ -17,9 +10,7 @@ export interface LogEntry {
 
 export interface Contact {
   name: string
-  actions: Action[]
   notes: Note[]
   log: LogEntry[]
+  lastEditedAt?: string
 }
-
-export type ContactColor = 'none' | 'yellow' | 'red'

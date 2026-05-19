@@ -11,16 +11,6 @@ struct LogEntry {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-struct Action {
-    id: String,
-    content: String,
-    #[serde(rename = "intervalDays", skip_serializing_if = "Option::is_none")]
-    interval_days: Option<u32>,
-    #[serde(rename = "lastProgressAt", skip_serializing_if = "Option::is_none")]
-    last_progress_at: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
 struct Note {
     id: String,
     content: String,
@@ -29,9 +19,12 @@ struct Note {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct Contact {
     name: String,
-    actions: Vec<Action>,
+    #[serde(default)]
     notes: Vec<Note>,
+    #[serde(default)]
     log: Vec<LogEntry>,
+    #[serde(rename = "lastEditedAt", skip_serializing_if = "Option::is_none")]
+    last_edited_at: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -112,6 +105,10 @@ fn save_contact(folder: String, contact: Contact, old_name: Option<String>) -> R
         }
     }
     let path = dir.join(format!("{}.json", contact.name));
+    let contact = Contact {
+        last_edited_at: Some(chrono::Local::now().to_rfc3339()),
+        ..contact
+    };
     let contents = serde_json::to_string_pretty(&contact).map_err(|e| e.to_string())?;
     fs::write(&path, contents).map_err(|e| e.to_string())
 }
