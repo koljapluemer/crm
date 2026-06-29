@@ -49,6 +49,17 @@ async function selectContact(name: string) {
   selectedContact.value = contactsMap.value[name] ?? null
 }
 
+async function changeFolder() {
+  const picked = await open({ directory: true, multiple: false, title: 'Choose CRM data folder' })
+  if (!picked) return
+  const folder = picked as string
+  await setDataFolder(folder)
+  dataFolder.value = folder
+  selectedName.value = null
+  selectedContact.value = null
+  await refreshContacts()
+}
+
 async function createContact() {
   const name = prompt('Contact name:')?.trim()
   if (!name || !dataFolder.value) return
@@ -80,6 +91,7 @@ async function onContactUpdate(updated: Contact) {
       :contactsMap="contactsMap"
       @select="selectContact"
       @create="createContact"
+      @changeFolder="changeFolder"
     />
 
     <main class="flex-1 overflow-hidden bg-white">

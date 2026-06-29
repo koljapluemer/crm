@@ -13,4 +13,6 @@ export interface Contact {
   notes: Note[]
   log: LogEntry[]
   lastEditedAt?: string
+  acuteTaskOpen?: boolean
+  uncontacted?: boolean
 }

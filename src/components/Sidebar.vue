@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { UserPlus } from 'lucide-vue-next'
+import { computed } from 'vue'
+import { UserPlus, FolderOpen } from 'lucide-vue-next'
 import type { Contact } from '../types'
 import { contactRowStyle } from '../composables/useContacts'
 
@@ -12,7 +13,15 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [name: string]
   create: []
+  changeFolder: []
 }>()
+
+const sortedContactNames = computed(() => {
+  const acute = props.contactNames.filter(n => props.contactsMap[n]?.acuteTaskOpen)
+  const normal = props.contactNames.filter(n => !props.contactsMap[n]?.acuteTaskOpen && !props.contactsMap[n]?.uncontacted)
+  const uncontacted = props.contactNames.filter(n => !props.contactsMap[n]?.acuteTaskOpen && props.contactsMap[n]?.uncontacted)
+  return [...acute, ...normal, ...uncontacted]
+})
 
 function itemStyle(name: string): Record<string, string> {
   const contact = props.contactsMap[name]
@@ -23,12 +32,19 @@ function itemStyle(name: string): Record<string, string> {
 
 <template>
   <aside class="w-56 bg-gray-50 border-r border-gray-200 flex flex-col h-full">
-    <div class="px-4 py-3 border-b border-gray-200">
+    <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
       <h1 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Contacts</h1>
+      <button
+        @click="emit('changeFolder')"
+        title="Change folder"
+        class="text-gray-400 hover:text-gray-700 transition-colors"
+      >
+        <FolderOpen :size="15" />
+      </button>
     </div>
     <div class="flex-1 overflow-y-auto py-1">
       <button
-        v-for="name in contactNames"
+        v-for="name in sortedContactNames"
         :key="name"
         @click="emit('select', name)"
         :class="[

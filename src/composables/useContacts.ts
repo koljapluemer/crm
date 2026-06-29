@@ -64,7 +64,17 @@ function lightnessForAge(days: number): number {
   return RECENT_LIGHTNESS + (STALE_LIGHTNESS - RECENT_LIGHTNESS) * progress
 }
 
+const ORANGE_BG = 'hsl(28 88% 52%)'
+const GREY_BG = 'hsl(0 0% 76%)'
+
 export function contactRowStyle(contact: Contact): Record<string, string> {
+  if (contact.acuteTaskOpen) {
+    return { backgroundColor: ORANGE_BG, color: LIGHT_TEXT }
+  }
+  if (contact.uncontacted) {
+    return { backgroundColor: GREY_BG, color: DARK_TEXT }
+  }
+
   const lastEditedAt = contact.lastEditedAt
   if (!lastEditedAt) {
     return {

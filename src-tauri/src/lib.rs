@@ -25,6 +25,10 @@ struct Contact {
     log: Vec<LogEntry>,
     #[serde(rename = "lastEditedAt", skip_serializing_if = "Option::is_none")]
     last_edited_at: Option<String>,
+    #[serde(rename = "acuteTaskOpen", skip_serializing_if = "Option::is_none")]
+    acute_task_open: Option<bool>,
+    #[serde(rename = "uncontacted", skip_serializing_if = "Option::is_none")]
+    uncontacted: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
